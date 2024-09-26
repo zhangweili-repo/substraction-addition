@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Math Lessons</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        h1 {
+            color: #4a4a4a;
+        }
+        #question {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        #answer {
+            font-size: 18px;
+            padding: 5px;
+            width: 100px;
+        }
+        #next {
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #next:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #progress {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        #result-image {
+            max-width: 200px;
+            margin: 20px auto;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fun Math Lessons</h1>
+        <div id="question"></div>
+        <input type="number" id="answer" placeholder="Your answer">
+        <button id="next" disabled>Next</button>
+        <img id="result-image" alt="Result">
+        <div id="progress"></div>
+    </div>
+
+    <script>
+        const questions = [
+             { q: "What is 546 - 329?", a: 217 },
+{ q: "What is 872 - 641?", a: 231 },
+{ q: "What is 453 + 218?", a: 671 },
+{ q: "What is 397 + 504?", a: 901 },
+{ q: "What is 784 - 276?", a: 508 },
+{ q: "What is 612 - 389?", a: 223 },
+{ q: "What is 825 + 149?", a: 974 },
+{ q: "What is 674 + 215?", a: 889 },
+{ q: "What is 953 - 527?", a: 426 },
+{ q: "What is 789 - 314?", a: 475 },
+{ q: "What is 478 + 321?", a: 799 },
+{ q: "What is 364 + 429?", a: 793 },
+{ q: "What is 687 - 543?", a: 144 },
+{ q: "What is 529 - 318?", a: 211 },
+{ q: "What is 824 + 163?", a: 987 },
+{ q: "What is 612 + 390?", a: 1002 },
+{ q: "What is 754 - 328?", a: 426 },
+{ q: "What is 903 - 674?", a: 229 },
+{ q: "What is 821 + 174?", a: 995 },
+{ q: "What is 735 + 255?", a: 990 },
+{ q: "What is 482 - 347?", a: 135 },
+{ q: "What is 593 - 261?", a: 332 },
+{ q: "What is 769 + 238?", a: 1007 },
+{ q: "What is 514 + 423?", a: 937 },
+{ q: "What is 687 - 452?", a: 235 },
+{ q: "What is 799 - 586?", a: 213 },
+{ q: "What is 633 + 157?", a: 790 },
+{ q: "What is 742 + 311?", a: 1053 },
+{ q: "What is 958 - 467?", a: 491 },
+{ q: "What is 841 - 329?", a: 512 },
+{ q: "What is 592 + 407?", a: 999 },
+{ q: "What is 375 + 412?", a: 787 },
+{ q: "What is 619 - 278?", a: 341 },
+{ q: "What is 831 - 469?", a: 362 },
+{ q: "What is 763 + 234?", a: 997 },
+{ q: "What is 586 + 313?", a: 899 },
+{ q: "What is 872 - 548?", a: 324 },
+{ q: "What is 963 - 735?", a: 228 },
+{ q: "What is 748 + 125?", a: 873 },
+{ q: "What is 654 + 278?", a: 932 },
+{ q: "What is 591 - 432?", a: 159 },
+{ q: "What is 483 - 257?", a: 226 },
+{ q: "What is 765 + 134?", a: 899 },
+{ q: "What is 519 + 380?", a: 899 },
+{ q: "What is 841 - 693?", a: 148 },
+{ q: "What is 702 - 439?", a: 263 },
+{ q: "What is 834 + 156?", a: 990 },
+{ q: "What is 694 + 231?", a: 925 },
+{ q: "What is 986 - 512?", a: 474 },
+{ q: "What is 873 - 346?", a: 527 },
+{ q: "What is 589 + 392?", a: 981 },
+{ q: "What is 472 + 513?", a: 985 },
+{ q: "What is 728 - 469?", a: 259 },
+{ q: "What is 673 - 542?", a: 131 },
+{ q: "What is 815 + 124?", a: 939 },
+{ q: "What is 693 + 287?", a: 980 },
+{ q: "What is 912 - 674?", a: 238 },
+{ q: "What is 836 - 598?", a: 238 },
+{ q: "What is 745 + 193?", a: 938 },
+{ q: "What is 652 + 319?", a: 971 },
+{ q: "What is 471 - 258?", a: 213 },
+{ q: "What is 584 - 329?", a: 255 },
+{ q: "What is 673 + 198?", a: 871 },
+{ q: "What is 523 + 406?", a: 929 },
+{ q: "What is 749 - 564?", a: 185 },
+{ q: "What is 834 - 512?", a: 322 },
+{ q: "What is 912 + 154?", a: 1066 },
+{ q: "What is 653 + 348?", a: 1001 },
+{ q: "What is 891 - 723?", a: 168 },
+{ q: "What is 765 - 442?", a: 323 },
+{ q: "What is 514 + 372?", a: 886 },
+{ q: "What is 623 + 248?", a: 871 },
+{ q: "What is 785 - 462?", a: 323 },
+{ q: "What is 947 - 538?", a: 409 },
+{ q: "What is 612 + 174?", a: 786 },
+{ q: "What is 738 + 241?", a: 979 },
+{ q: "What is 879 - 564?", a: 315 },
+{ q: "What is 901 - 638?", a: 263 },
+{ q: "What is 729 + 186?", a: 915 },
+{ q: "What is 843 + 253?", a: 1096 },
+{ q: "What is 492 - 315?", a: 177 },
+{ q: "What is 781 - 437?", a: 344 },
+{ q: "What is 683 + 291?", a: 974 },
+{ q: "What is 564 + 378?", a: 942 },
+{ q: "What is 759 - 416?", a: 343 },
+{ q: "What is 834 - 627?", a: 207 },
+{ q: "What is 723 + 148?", a: 871 },
+{ q: "What is 659 + 234?", a: 893 },
+{ q: "What is 914 - 536?", a: 378 },
+{ q: "What is 842 - 283?", a: 559 },
+{ q: "What is 438 - 297?", a: 141 },
+{ q: "What is 652 - 417?", a: 235 },
+{ q: "What is 389 + 214?", a: 603 },
+{ q: "What is 573 + 326?", a: 899 },
+{ q: "What is 841 - 569?", a: 272 },
+{ q: "What is 792 - 358?", a: 434 },
+{ q: "What is 674 + 183?", a: 857 },
+{ q: "What is 511 + 489?", a: 1000 },
+{ q: "What is 928 - 473?", a: 455 },
+{ q: "What is 765 - 342?", a: 423 }
+        ];
+function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Shuffle the questions array before starting
+        shuffleArray(questions);
+
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        const totalQuestions = 10;
+
+        const questionEl = document.getElementById('question');
+        const answerEl = document.getElementById('answer');
+        const nextBtn = document.getElementById('next');
+        const progressEl = document.getElementById('progress');
+        const resultImage = document.getElementById('result-image');
+
+        function loadQuestion() {
+            if (currentQuestion < totalQuestions) {
+                questionEl.textContent = questions[currentQuestion].q;
+                answerEl.value = '';
+                nextBtn.disabled = true;
+                progressEl.textContent = `${correctAnswers}/${totalQuestions}`;
+                resultImage.style.display = 'none';
+            } else {
+                questionEl.textContent = "Great job! You've completed all the questions!";
+                answerEl.style.display = 'none';
+                nextBtn.style.display = 'none';
+                resultImage.style.display = 'none';
+                progressEl.textContent = `${totalQuestions}/${totalQuestions}`; // Update the progress one last time
+                setTimeout(() => {
+                    alert('Thank you for studying with us!');
+                }, 500);
+            }
+        }
+
+        answerEl.addEventListener('input', () => {
+            nextBtn.disabled = answerEl.value.trim() === '';
+        });
+
+        nextBtn.addEventListener('click', () => {
+            const userAnswer = parseInt(answerEl.value);
+            if (userAnswer === questions[currentQuestion].a) {
+                correctAnswers++;
+                resultImage.src = 'Happy.png';
+                resultImage.alt = 'Correct Answer';
+                resultImage.style.display = 'block';
+                setTimeout(() => {
+                    currentQuestion++;
+                    loadQuestion();
+                }, 2500);
+            } else {
+                resultImage.src = 'Sad.png';
+                resultImage.alt = 'Wrong Answer';
+                resultImage.style.display = 'block';
+                setTimeout(() => {
+                    resultImage.style.display = 'none';
+                }, 2500);
+            }
+        });
+
+        loadQuestion();
+    </script>
+</body>
+</html>
